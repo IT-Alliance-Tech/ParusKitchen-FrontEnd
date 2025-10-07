@@ -8,8 +8,7 @@ const SignupPage = () => {
 
   const handleSignup = (e) => {
     e.preventDefault();
-    // TODO: Connect API later
-    console.log("Signup with:", name, email, password);
+    alert(`Signup attempted with\nName: ${name}\nEmail: ${email}\nPassword: ${password}`);
   };
 
   return (
@@ -19,47 +18,35 @@ const SignupPage = () => {
           Create an Account
         </h2>
         <form onSubmit={handleSignup} className="space-y-4">
-          <div>
-            <label className="font-lato text-gray-700">Full Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="w-full mt-1 p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600"
-              placeholder="Your Name"
-            />
-          </div>
-          <div>
-            <label className="font-lato text-gray-700">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full mt-1 p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600"
-              placeholder="you@example.com"
-            />
-          </div>
-          <div>
-            <label className="font-lato text-gray-700">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full mt-1 p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600"
-              placeholder="********"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-poppins font-semibold transition-all duration-200"
-          >
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full Name"
+            className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600"
+            required
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600"
+            required
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600"
+            required
+          />
+          <button className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-poppins font-semibold">
             Sign Up
           </button>
         </form>
-        <p className="text-center mt-4 font-lato text-gray-600">
+        <p className="text-center mt-4">
           Already have an account?{" "}
           <Link to="/login" className="text-primary-600 font-semibold">
             Login
