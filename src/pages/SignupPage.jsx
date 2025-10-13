@@ -1,14 +1,26 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signupUser } from "../api";
 
 const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    alert(`Signup attempted with\nName: ${name}\nEmail: ${email}\nPassword: ${password}`);
+    setError("");
+    try {
+      const data = await signupUser({ name, email, password });
+      // Save JWT token to localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/"); // redirect to homepage after signup
+    } catch (err) {
+      setError(err.response?.data?.message || "Signup failed. Please try again.");
+    }
   };
 
   return (
@@ -17,6 +29,7 @@ const SignupPage = () => {
         <h2 className="text-3xl font-poppins font-bold text-primary-800 mb-6 text-center">
           Create an Account
         </h2>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSignup} className="space-y-4">
           <input
             type="text"

@@ -1,58 +1,77 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getMyOrders } from "../api";
 
 const OrdersPage = () => {
-  // TODO: Connect API to fetch user orders
-  const orders = [
-    {
-      id: 1,
-      date: "2025-10-07",
-      total: 450,
-      status: "Delivered",
-    },
-    {
-      id: 2,
-      date: "2025-10-05",
-      total: 280,
-      status: "In Progress",
-    },
-  ];
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const data = await getMyOrders();
+      setOrders(data);
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    }
+    setLoading(false);
+  };
+
+  if (loading) return <p className="text-center mt-12">Loading orders...</p>;
 
   return (
-    <div className="min-h-screen bg-primary-50 p-4">
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-poppins font-bold text-primary-800 mb-6">
-          Your Orders
-        </h2>
+    <main className="flex-grow bg-beige-50 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold text-primary-800 mb-6">My Orders</h1>
+
         {orders.length === 0 ? (
-          <p className="text-gray-600 font-lato">You have no orders yet.</p>
+          <p className="text-center text-gray-600">You have not placed any orders yet.</p>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="flex justify-between items-center p-4 border rounded-xl"
+                className="bg-white p-6 rounded-2xl shadow-md flex flex-col gap-2"
               >
-                <div>
-                  <p className="font-lato text-gray-600">Order Date: {order.date}</p>
-                  <p className="font-poppins font-semibold text-primary-800">
-                    Total: ₹{order.total}
-                  </p>
+                <p>
+                  <strong>Order ID:</strong> {order.id}
+                </p>
+                <p>
+                  <strong>Date:</strong> {new Date(order.date).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span
+                    className={`font-semibold ${
+                      order.status === "Delivered"
+                        ? "text-green-600"
+                        : order.status === "Pending"
+                        ? "text-yellow-600"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {order.status}
+                  </span>
+                </p>
+                <div className="mt-2">
+                  <strong>Items:</strong>
+                  <ul className="list-disc list-inside">
+                    {order.items?.map((item) => (
+                      <li key={item.id}>
+                        {item.name} x {item.quantity}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <span
-                  className={`px-4 py-1 rounded-full font-lato text-sm ${
-                    order.status === "Delivered"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
-                >
-                  {order.status}
-                </span>
               </div>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 
