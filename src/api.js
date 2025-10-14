@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // ====================== BASE CONFIG ======================
-const BASE_URL = "http://localhost:5000/api"; // change this when deployed
+const BASE_URL = "http://localhost:5000/api"; // change when deploying
 
 // Helper: attach JWT token to headers
 const getAuthHeader = () => {
@@ -10,7 +10,7 @@ const getAuthHeader = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-// Common error handler
+// Centralized error handling
 const handleApiError = (error, action = "Request") => {
   if (error.response) {
     console.error(`${action} error (response):`, error.response.data);
@@ -25,39 +25,22 @@ const handleApiError = (error, action = "Request") => {
 };
 
 // ====================== AUTH ======================
-export const loginUser = async ({ email, password }) => {
+export const loginUser = async (credentials) => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/users/login`,
-      { email, password },
-      { headers: { "Content-Type": "application/json" } }
-    );
-
-    const data = response.data;
-
-    // Keep both _id and id to prevent breaking old code
-    return {
-      token: data.token,
-      user: {
-        id: data.user?._id || data.userId || null,
-        name: data.user?.name || data.name,
-        email: data.user?.email || data.email,
-        role: data.user?.role || data.role,
-      },
-    };
+    const response = await axios.post(`${BASE_URL}/users/login`, credentials, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.data;
   } catch (error) {
     handleApiError(error, "Login");
   }
 };
 
-// ====================== SIGNUP ======================
-export const signupUser = async ({ name, email, password }) => {
+export const signupUser = async (userData) => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/users/signup`,
-      { name, email, password },
-      { headers: { "Content-Type": "application/json" } }
-    );
+    const response = await axios.post(`${BASE_URL}/users/signup`, userData, {
+      headers: { "Content-Type": "application/json" },
+    });
     return response.data;
   } catch (error) {
     handleApiError(error, "Signup");
@@ -76,9 +59,9 @@ export const getUserProfile = async () => {
   }
 };
 
-export const updateUserProfile = async (updatedData) => {
+export const updateUserProfile = async (data) => {
   try {
-    const response = await axios.put(`${BASE_URL}/users/profile`, updatedData, {
+    const response = await axios.put(`${BASE_URL}/users/profile`, data, {
       headers: { "Content-Type": "application/json", ...getAuthHeader() },
     });
     return response.data;
@@ -139,27 +122,6 @@ export const deleteMeal = async (id) => {
   }
 };
 
-// ====================== REVIEWS ======================
-export const fetchReviews = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/reviews`);
-    return response.data;
-  } catch (error) {
-    handleApiError(error, "Fetch reviews");
-  }
-};
-
-export const createReview = async (reviewData) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/reviews`, reviewData, {
-      headers: { "Content-Type": "application/json", ...getAuthHeader() },
-    });
-    return response.data;
-  } catch (error) {
-    handleApiError(error, "Create review");
-  }
-};
-
 // ====================== ORDERS ======================
 export const getMyOrders = async () => {
   try {
@@ -183,6 +145,54 @@ export const createOrder = async (orderData) => {
   }
 };
 
+// ====================== ADMIN DASHBOARD ======================
+export const getAdminDashboardData = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/admin/dashboard`, {
+      headers: getAuthHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Get admin dashboard data");
+  }
+};
+
+// ====================== ADMIN USERS ======================
+// ====================== ADMIN USERS ======================
+// ====================== ADMIN USERS ======================
+export const getAllUsers = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/admin/dashboard/users`, {
+      headers: { ...getAuthHeader() },
+    });
+     console.log("Users fetched:", response.data);
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Get all users");
+  }
+};
+
+
+export const deleteUser = async (id) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/admin/dashboard/users/${id}`, {
+      headers: getAuthHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Delete user");
+  }
+};
+
+// ====================== REVIEWS ======================
+export const fetchReviews = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/reviews`);
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Fetch reviews");
+  }
+};
 // ====================== CART ======================
 export const getCart = async () => {
   try {
@@ -227,7 +237,6 @@ export const removeFromCart = async (id) => {
     handleApiError(error, "Remove from cart");
   }
 };
-
 // ====================== ADMIN DASHBOARD ======================
 export const getAdminTotalOrders = async () => {
   try {
@@ -270,15 +279,5 @@ export const getAdminRevenue = async () => {
     return response.data;
   } catch (error) {
     handleApiError(error, "Get admin revenue");
-  }
-};
-
-// ====================== MENU (for Menu Page) ======================
-export const getMenu = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/meals`); // uses same API as meals
-    return response.data;
-  } catch (error) {
-    handleApiError(error, "Get menu");
   }
 };

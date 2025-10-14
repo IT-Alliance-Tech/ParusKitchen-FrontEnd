@@ -1,5 +1,6 @@
 // src/pages/AdminDashboard.jsx
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getAdminTotalOrders,
   getAdminTotalMeals,
@@ -16,6 +17,7 @@ const AdminDashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTotals = async () => {
@@ -31,7 +33,7 @@ const AdminDashboard = () => {
         ]);
 
         setTotals({
-          orders: orders.totalOrders || 0, // match backend response keys
+          orders: orders.totalOrders || 0,
           meals: meals.totalMeals || 0,
           users: users.totalUsers || 0,
           revenue: revenue.totalRevenue || 0,
@@ -70,17 +72,17 @@ const AdminDashboard = () => {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-md text-center">
+        <div className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer" onClick={() => navigate("/admin/orders")}>
           <h2 className="text-lg font-semibold mb-2">Total Orders</h2>
           <p className="text-3xl font-bold text-primary-600">{totals.orders}</p>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-md text-center">
+        <div className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer" onClick={() => navigate("/admin/meals")}>
           <h2 className="text-lg font-semibold mb-2">Total Meals</h2>
           <p className="text-3xl font-bold text-primary-600">{totals.meals}</p>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-md text-center">
+        <div className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer" onClick={() => navigate("/admin/users")}>
           <h2 className="text-lg font-semibold mb-2">Total Users</h2>
           <p className="text-3xl font-bold text-primary-600">{totals.users}</p>
         </div>
