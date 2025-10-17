@@ -293,5 +293,18 @@ export const getAllMeals = async () => {
     handleApiError(error, "Get all meals");
   }
 };
+// ====================== ADMIN ORDERS ======================
+
+export const getAdminOrders = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/admin/dashboard/orders`, {
+      headers: getAuthHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Get admin orders");
+    return []; // return empty array if API fails
+  }
+};
 
 

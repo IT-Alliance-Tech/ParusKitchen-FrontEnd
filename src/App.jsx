@@ -25,6 +25,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminMealsPage from "./pages/AdminMealsPage";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
 
 function App() {
   return (
@@ -70,6 +71,14 @@ function App() {
               <ProtectedRoute>
                <AdminMealsPage />
                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute>
+                  <AdminOrdersPage />
+                </ProtectedRoute>
               }
             />
             
