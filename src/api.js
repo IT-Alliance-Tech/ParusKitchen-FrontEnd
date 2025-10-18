@@ -281,3 +281,30 @@ export const getAdminRevenue = async () => {
     handleApiError(error, "Get admin revenue");
   }
 };
+// ====================== ADMIN MEALS ======================
+
+export const getAllMeals = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/admin/dashboard/meals`, {
+      headers: getAuthHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Get all meals");
+  }
+};
+// ====================== ADMIN ORDERS ======================
+
+export const getAdminOrders = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/admin/dashboard/orders`, {
+      headers: getAuthHeader(),
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Get admin orders");
+    return []; // return empty array if API fails
+  }
+};
+
+

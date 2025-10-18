@@ -1,12 +1,12 @@
 // src/pages/AdminDashboard.jsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   getAdminTotalOrders,
   getAdminTotalMeals,
   getAdminTotalUsers,
   getAdminRevenue,
 } from "../api";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [totals, setTotals] = useState({
@@ -72,21 +72,34 @@ const AdminDashboard = () => {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer" onClick={() => navigate("/admin/orders")}>
+        {/* Total Orders */}
+        <div
+          onClick={() => navigate("/admin/orders")}
+          className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+        >
           <h2 className="text-lg font-semibold mb-2">Total Orders</h2>
           <p className="text-3xl font-bold text-primary-600">{totals.orders}</p>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer" onClick={() => navigate("/admin/meals")}>
+        {/* Total Meals */}
+        <div
+          onClick={() => navigate("/admin/meals")}
+          className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+        >
           <h2 className="text-lg font-semibold mb-2">Total Meals</h2>
           <p className="text-3xl font-bold text-primary-600">{totals.meals}</p>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer" onClick={() => navigate("/admin/users")}>
+        {/* Total Users */}
+        <div
+          onClick={() => navigate("/admin/users")}
+          className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+        >
           <h2 className="text-lg font-semibold mb-2">Total Users</h2>
           <p className="text-3xl font-bold text-primary-600">{totals.users}</p>
         </div>
 
+        {/* Revenue */}
         <div className="bg-white p-6 rounded-xl shadow-md text-center">
           <h2 className="text-lg font-semibold mb-2">Revenue</h2>
           <p className="text-3xl font-bold text-primary-600">
