@@ -158,20 +158,16 @@ export const getAdminDashboardData = async () => {
 };
 
 // ====================== ADMIN USERS ======================
-// ====================== ADMIN USERS ======================
-// ====================== ADMIN USERS ======================
 export const getAllUsers = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/users`, {
-      headers: { ...getAuthHeader() },
+      headers: getAuthHeader(),
     });
-     console.log("Users fetched:", response.data);
     return response.data;
   } catch (error) {
     handleApiError(error, "Get all users");
   }
 };
-
 
 export const deleteUser = async (id) => {
   try {
@@ -193,6 +189,7 @@ export const fetchReviews = async () => {
     handleApiError(error, "Fetch reviews");
   }
 };
+
 // ====================== CART ======================
 export const getCart = async () => {
   try {
@@ -237,11 +234,12 @@ export const removeFromCart = async (id) => {
     handleApiError(error, "Remove from cart");
   }
 };
-// ====================== ADMIN DASHBOARD ======================
+
+// ====================== ADMIN DASHBOARD STATS ======================
 export const getAdminTotalOrders = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/total-orders`, {
-      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+      headers: getAuthHeader(),
     });
     return response.data;
   } catch (error) {
@@ -252,7 +250,7 @@ export const getAdminTotalOrders = async () => {
 export const getAdminTotalMeals = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/total-meals`, {
-      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+      headers: getAuthHeader(),
     });
     return response.data;
   } catch (error) {
@@ -263,7 +261,7 @@ export const getAdminTotalMeals = async () => {
 export const getAdminTotalUsers = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/total-users`, {
-      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+      headers: getAuthHeader(),
     });
     return response.data;
   } catch (error) {
@@ -274,15 +272,15 @@ export const getAdminTotalUsers = async () => {
 export const getAdminRevenue = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/revenue`, {
-      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+      headers: getAuthHeader(),
     });
     return response.data;
   } catch (error) {
     handleApiError(error, "Get admin revenue");
   }
 };
-// ====================== ADMIN MEALS ======================
 
+// ====================== ADMIN MEALS ======================
 export const getAllMeals = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/meals`, {
@@ -293,8 +291,8 @@ export const getAllMeals = async () => {
     handleApiError(error, "Get all meals");
   }
 };
-// ====================== ADMIN ORDERS ======================
 
+// ====================== ADMIN ORDERS ======================
 export const getAdminOrders = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/orders`, {
@@ -303,8 +301,41 @@ export const getAdminOrders = async () => {
     return response.data;
   } catch (error) {
     handleApiError(error, "Get admin orders");
-    return []; // return empty array if API fails
+    return [];
   }
 };
 
+// ====================== SUBSCRIPTIONS (FRONTEND) ======================
+// Fetch all subscription plans
+export const getSubscriptions = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/subscriptions`);
+    return response.data; // must be an array
+  } catch (error) {
+    console.error("Get subscriptions error (response):", error.response || error);
+    return [];
+  }
+};
 
+// Fetch all subscription add-ons
+export const getAddOns = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/subscriptions/addons`);
+    return response.data; // must be an array
+  } catch (error) {
+    console.error("Get add-ons error (response):", error.response || error);
+    return [];
+  }
+};
+
+// Subscribe to a plan
+export const subscribeToPlan = async (subscriptionData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/subscriptions`, subscriptionData, {
+      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Subscribe to plan");
+  }
+};
