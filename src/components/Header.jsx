@@ -13,12 +13,23 @@ const Header = () => {
   // Check if user is logged in (from localStorage) on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    if (storedUser) setUser(JSON.parse(storedUser));
+    try {
+      if (storedUser) setUser(JSON.parse(storedUser));
+    } catch (error) {
+      console.warn('Invalid user data in localStorage. Clearing...');
+      localStorage.removeItem('user');
+      setUser(null);
+    }
 
     // Listen for storage changes (login/logout from other tabs)
     const handleStorageChange = () => {
       const updatedUser = localStorage.getItem('user');
-      setUser(updatedUser ? JSON.parse(updatedUser) : null);
+      try {
+        setUser(updatedUser ? JSON.parse(updatedUser) : null);
+      } catch (error) {
+        localStorage.removeItem('user');
+        setUser(null);
+      }
     };
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
