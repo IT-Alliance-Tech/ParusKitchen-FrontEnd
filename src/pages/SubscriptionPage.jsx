@@ -1,14 +1,16 @@
 // src/pages/SubscriptionPage.jsx
 import React, { useEffect, useState } from "react";
-import { getSubscriptions, getAddOns } from "../api";
-
+import { useNavigate } from "react-router-dom";
+import { getSubscriptions, getAddOns, addToCart } from "../api";
 
 const SubscriptionPage = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [addOns, setAddOns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
+  // Fetch subscriptions and add-ons
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -16,7 +18,6 @@ const SubscriptionPage = () => {
       try {
         const subsData = await getSubscriptions();
         const addOnsData = await getAddOns();
-
         setSubscriptions(subsData || []);
         setAddOns(addOnsData || []);
       } catch (err) {
@@ -26,9 +27,29 @@ const SubscriptionPage = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
+
+  const handleAddToCart = async (subscriptionId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { state: { redirect: "/subscriptions" } });
+      return;
+    }
+
+    try {
+      await addToCart({ itemType: "subscription", itemId: subscriptionId, quantity: 1 });
+      alert("Subscription added to cart successfully!");
+      navigate("/cart"); // Redirect to cart after adding
+    } catch (err) {
+      console.error("Error adding subscription to cart:", err);
+      if (err.message.includes("Unauthorized")) {
+        navigate("/login", { state: { redirect: "/subscriptions" } });
+      } else {
+        alert("Failed to add subscription to cart. Please try again.");
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -54,7 +75,13 @@ const SubscriptionPage = () => {
               <h2 className="text-xl font-semibold text-primary-700 mb-2">{plan.name}</h2>
               <p className="text-gray-700 mb-2">{plan.description}</p>
               <p className="font-medium text-gray-900 mb-1">Price: ${plan.price}</p>
-              <p className="text-gray-600">Duration: {plan.duration}</p>
+              <p className="text-gray-600 mb-3">Duration: {plan.duration}</p>
+              <button
+                className="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700"
+                onClick={() => handleAddToCart(plan._id)}
+              >
+                Add to Cart
+              </button>
             </div>
           ))}
         </div>
