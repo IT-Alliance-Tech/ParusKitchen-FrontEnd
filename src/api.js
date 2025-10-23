@@ -202,10 +202,16 @@ export const getCart = async () => {
   }
 };
 
+// ✅ FIXED addToCart to properly work with subscriptions and handle unauthorized users
 export const addToCart = async (cartItem) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("User not logged in");
+  }
+
   try {
     const response = await axios.post(`${BASE_URL}/cart`, cartItem, {
-      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     });
     return response.data;
   } catch (error) {
@@ -235,6 +241,37 @@ export const removeFromCart = async (id) => {
   }
 };
 
+// ====================== SUBSCRIPTIONS ======================
+export const getSubscriptions = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/subscriptions`);
+    return response.data;
+  } catch (error) {
+    console.error("Get subscriptions error (response):", error.response || error);
+    return [];
+  }
+};
+
+export const getAddOns = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/subscriptions/addons`);
+    return response.data;
+  } catch (error) {
+    console.error("Get add-ons error (response):", error.response || error);
+    return [];
+  }
+};
+
+export const subscribeToPlan = async (subscriptionData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/subscriptions`, subscriptionData, {
+      headers: { "Content-Type": "application/json", ...getAuthHeader() },
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Subscribe to plan");
+  }
+};
 // ====================== ADMIN DASHBOARD STATS ======================
 export const getAdminTotalOrders = async () => {
   try {
@@ -269,6 +306,7 @@ export const getAdminTotalUsers = async () => {
   }
 };
 
+// ✅ Fix: add getAdminRevenue back
 export const getAdminRevenue = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/revenue`, {
@@ -279,7 +317,6 @@ export const getAdminRevenue = async () => {
     handleApiError(error, "Get admin revenue");
   }
 };
-
 // ====================== ADMIN MEALS ======================
 export const getAllMeals = async () => {
   try {
@@ -291,7 +328,6 @@ export const getAllMeals = async () => {
     handleApiError(error, "Get all meals");
   }
 };
-
 // ====================== ADMIN ORDERS ======================
 export const getAdminOrders = async () => {
   try {
@@ -301,41 +337,5 @@ export const getAdminOrders = async () => {
     return response.data;
   } catch (error) {
     handleApiError(error, "Get admin orders");
-    return [];
-  }
-};
-
-// ====================== SUBSCRIPTIONS (FRONTEND) ======================
-// Fetch all subscription plans
-export const getSubscriptions = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/subscriptions`);
-    return response.data; // must be an array
-  } catch (error) {
-    console.error("Get subscriptions error (response):", error.response || error);
-    return [];
-  }
-};
-
-// Fetch all subscription add-ons
-export const getAddOns = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/subscriptions/addons`);
-    return response.data; // must be an array
-  } catch (error) {
-    console.error("Get add-ons error (response):", error.response || error);
-    return [];
-  }
-};
-
-// Subscribe to a plan
-export const subscribeToPlan = async (subscriptionData) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/subscriptions`, subscriptionData, {
-      headers: { "Content-Type": "application/json", ...getAuthHeader() },
-    });
-    return response.data;
-  } catch (error) {
-    handleApiError(error, "Subscribe to plan");
   }
 };
