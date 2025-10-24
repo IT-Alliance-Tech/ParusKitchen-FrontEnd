@@ -72,11 +72,20 @@ export const updateUserProfile = async (data) => {
 
 // ====================== MEALS ======================
 export const getMeals = async () => {
+  
   try {
+  console.log("apiiii");
+
     const response = await axios.get(`${BASE_URL}/meals`);
+
+    console.log(response, "new pi");
+    
     return response.data;
   } catch (error) {
     handleApiError(error, "Get meals");
+
+    console.log(error);
+    
   }
 };
 
