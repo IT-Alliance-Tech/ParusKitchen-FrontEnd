@@ -19,6 +19,8 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import OrdersPage from "./pages/OrdersPage";
 import UserProfile from "./pages/UserProfile";
+import Dashboard from "./pages/Dashboard";
+
 
 // Admin Pages
 import AdminDashboard from "./pages/AdminDashboard";
@@ -46,6 +48,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/user-profile" element={<UserProfile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+
 
             {/* ---------- ADMIN ROUTES ---------- */}
             <Route path="/admin/login" element={<AdminLoginPage />} />
