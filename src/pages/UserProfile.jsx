@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ import useNavigate
 import { getUserProfile, updateUserProfile } from "../api";
 
 const UserProfile = () => {
@@ -10,6 +11,8 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate(); // ✅ initialize navigate
 
   useEffect(() => {
     fetchUserProfile();
@@ -55,6 +58,16 @@ const UserProfile = () => {
         {message && (
           <p className="text-center mb-4 text-green-600 font-semibold">{message}</p>
         )}
+
+        {/* ✅ New Dashboard Button */}
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl font-semibold"
+          >
+            Go to Dashboard
+          </button>
+        </div>
 
         {!editing ? (
           <div className="bg-white p-6 rounded-2xl shadow-md space-y-4">
