@@ -348,3 +348,9 @@ export const getAdminOrders = async () => {
     handleApiError(error, "Get admin orders");
   }
 };
+// src/api.js
+export const fetchPlans = async () => {
+  const res = await fetch('/api/plans');
+  if (!res.ok) throw new Error('Failed to fetch plans');
+  return res.json();
+};

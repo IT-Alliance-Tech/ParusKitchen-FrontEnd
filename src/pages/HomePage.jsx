@@ -1,17 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Users, Clock, Shield, Star, CheckCircle } from 'lucide-react';
-import { fetchReviews } from '../api'; // import the reviews API function
+import { fetchReviews, getSubscriptions } from '../api'; // ✅ includes both APIs
 
 const HomePage = () => {
   const [reviews, setReviews] = useState([]);
+  const [plans, setPlans] = useState([]);
 
+  // ✅ Fetch reviews from API
   useEffect(() => {
     const getReviews = async () => {
-      const data = await fetchReviews();
-      setReviews(data);
+      try {
+        const data = await fetchReviews();
+        setReviews(data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
     };
     getReviews();
+  }, []);
+
+  // ✅ Fetch subscription plans from API
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const data = await getSubscriptions();
+        setPlans(data);
+      } catch (error) {
+        console.error("Error fetching plans:", error);
+      }
+    };
+    fetchPlans();
   }, []);
 
   const features = [
@@ -32,36 +51,9 @@ const HomePage = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      name: 'Priya Sharma',
-      role: 'Software Engineer',
-      content: 'The food tastes exactly like home! Perfect portion sizes and always on time.',
-      rating: 5
-    },
-    {
-      name: 'Raj Patel',
-      role: 'MBA Student',
-      content: 'As a student, this service has been a lifesaver. Healthy, affordable, and delicious.',
-      rating: 5
-    },
-    {
-      name: 'Kavitha Reddy',
-      role: 'Working Mother',
-      content: 'My family loves the variety and authentic taste. Highly recommended!',
-      rating: 5
-    }
-  ];
-
-  const plans = [
-    { name: 'Basic Plan', price: '₹150', meals: '1 meal/day', popular: false },
-    { name: 'Standard Plan', price: '₹280', meals: '2 meals/day', popular: true },
-    { name: 'Premium Plan', price: '₹400', meals: '3 meals/day', popular: false }
-  ];
-
   return (
     <div className="animate-fade-in">
-      {/* Hero Section */}
+      {/* ================= HERO SECTION ================= */}
       <section className="relative bg-gradient-to-r from-beige-50 to-primary-50 py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -107,7 +99,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* ================= FEATURES ================= */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -125,28 +117,22 @@ const HomePage = () => {
                 <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <feature.icon className="h-8 w-8 text-primary-600" />
                 </div>
-                <h3 className="font-poppins font-semibold text-xl text-primary-800 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="font-lato text-gray-600 leading-relaxed">
-                  {feature.description}
-                </p>
+                <h3 className="font-poppins font-semibold text-xl text-primary-800 mb-3">{feature.title}</h3>
+                <p className="font-lato text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works Preview */}
+      {/* ================= HOW IT WORKS ================= */}
       <section className="py-16 bg-beige-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="font-poppins font-bold text-3xl lg:text-4xl text-primary-800 mb-4">
               How It Works
             </h2>
-            <p className="font-lato text-lg text-gray-600">
-              Getting fresh, homemade meals delivered is as easy as 1-2-3
-            </p>
+            <p className="font-lato text-lg text-gray-600">Getting fresh, homemade meals delivered is as easy as 1-2-3</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {[{ step: '01', title: 'Choose Your Plan', desc: 'Select from our flexible meal plans' },
@@ -173,64 +159,65 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Subscription Plans Preview */}
+      {/* ================= SUBSCRIPTION PLANS (API) ================= */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="font-poppins font-bold text-3xl lg:text-4xl text-primary-800 mb-4">
-              Subscription Plans
-            </h2>
-            <p className="font-lato text-lg text-gray-600">
-              Choose the perfect plan for your lifestyle and budget
-            </p>
+            <h2 className="font-poppins font-bold text-3xl lg:text-4xl text-primary-800 mb-4">Subscription Plans</h2>
+            <p className="font-lato text-lg text-gray-600">Choose the perfect plan for your lifestyle and budget</p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {plans.map((plan, index) => (
-              <div key={index} className={`relative p-8 rounded-2xl border-2 ${
-                plan.popular ? 'border-primary-600 bg-primary-50' : 'border-gray-200 bg-white'
-              } hover:shadow-xl transition-all duration-300`}>
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-poppins font-semibold">
-                    Most Popular
+            {plans.length > 0 ? (
+              plans.map((plan) => (
+                <div key={plan._id} className={`relative p-8 rounded-2xl border-2 ${
+                  plan.popular ? 'border-primary-600 bg-primary-50' : 'border-gray-200 bg-white'
+                } hover:shadow-xl transition-all duration-300`}>
+                  {plan.popular && (
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-poppins font-semibold">
+                      Most Popular
+                    </div>
+                  )}
+                  <div className="text-center">
+                    <h3 className="font-poppins font-bold text-2xl text-primary-800 mb-2">{plan.name}</h3>
+                    <div className="mb-4">
+                      <span className="font-poppins font-bold text-4xl text-primary-800">₹{plan.price}</span>
+                      <span className="font-lato text-gray-600">/day</span>
+                    </div>
+                    <p className="font-lato text-gray-600 mb-6">{plan.mealsPerDay || plan.meals}</p>
+                    <button className={`w-full py-3 rounded-full font-poppins font-semibold transition-colors duration-200 ${
+                      plan.popular
+                        ? 'bg-primary-600 hover:bg-primary-700 text-white'
+                        : 'border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white'
+                    }`}>
+                      Choose Plan
+                    </button>
                   </div>
-                )}
-                <div className="text-center">
-                  <h3 className="font-poppins font-bold text-2xl text-primary-800 mb-2">{plan.name}</h3>
-                  <div className="mb-4">
-                    <span className="font-poppins font-bold text-4xl text-primary-800">{plan.price}</span>
-                    <span className="font-lato text-gray-600">/day</span>
-                  </div>
-                  <p className="font-lato text-gray-600 mb-6">{plan.meals}</p>
-                  <button className={`w-full py-3 rounded-full font-poppins font-semibold transition-colors duration-200 ${
-                    plan.popular ? 'bg-primary-600 hover:bg-primary-700 text-white' :
-                      'border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white'
-                  }`}>Choose Plan</button>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-center text-gray-500 col-span-3">No plans available at the moment.</p>
+            )}
           </div>
+
           <div className="text-center">
-            <Link
-              to="/subscription"
-              className="font-lato text-primary-600 hover:text-primary-700 font-medium underline"
-            >
+            <Link to="/subscription" className="font-lato text-primary-600 hover:text-primary-700 font-medium underline">
               View all plans and features →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Reviews Section (from API) */}
+      {/* ================= REVIEWS SECTION ================= */}
       <section className="py-16 bg-primary-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="font-poppins font-bold text-3xl lg:text-4xl text-primary-800 mb-4">
-              What Our Customers Say
-            </h2>
+            <h2 className="font-poppins font-bold text-3xl lg:text-4xl text-primary-800 mb-4">What Our Customers Say</h2>
             <p className="font-lato text-lg text-gray-600">
               Join thousands of satisfied customers who trust us with their daily meals
             </p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {reviews.length > 0 ? (
               reviews.map((review) => (
@@ -240,9 +227,7 @@ const HomePage = () => {
                       <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                     ))}
                   </div>
-                  <p className="font-lato text-gray-700 mb-4 leading-relaxed">
-                    "{review.comment}"
-                  </p>
+                  <p className="font-lato text-gray-700 mb-4 leading-relaxed">"{review.comment}"</p>
                   <div>
                     <p className="font-poppins font-semibold text-primary-800">{review.name}</p>
                     <p className="font-lato text-sm text-gray-600">{review.role || 'Customer'}</p>
@@ -250,7 +235,7 @@ const HomePage = () => {
                 </div>
               ))
             ) : (
-              <p>No reviews yet.</p>
+              <p className="text-center text-gray-500 col-span-3">No reviews available yet.</p>
             )}
           </div>
         </div>
