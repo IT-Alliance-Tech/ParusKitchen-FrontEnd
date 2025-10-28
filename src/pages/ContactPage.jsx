@@ -240,7 +240,6 @@ const ContactPage = () => {
 
             {/* Business Hours & Quick Info */}
             <div className="space-y-8">
-              {/* Business Hours */}
               <div className="bg-white rounded-2xl p-6 shadow-lg">
                 <div className="flex items-center mb-4">
                   <Clock className="h-6 w-6 text-primary-600 mr-3" />
@@ -274,7 +273,6 @@ const ContactPage = () => {
                 </div>
               </div>
 
-              {/* Quick Actions */}
               <div className="bg-primary-600 rounded-2xl p-6 text-white">
                 <h3 className="font-poppins font-bold text-xl mb-4">
                   Need Immediate Help?
@@ -309,9 +307,9 @@ const ContactPage = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* ✅ UPDATED FAQ Section */}
       <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="font-poppins font-bold text-3xl lg:text-4xl text-primary-800 mb-4">
               Frequently Asked Questions
@@ -320,9 +318,14 @@ const ContactPage = () => {
               Quick answers to common questions. Don't see yours? Contact us directly!
             </p>
           </div>
-          <div className="space-y-6">
+
+          {/* Responsive Grid for FAQs */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {faqs.map((faq, index) => (
-              <div key={index} className="bg-primary-50 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
+              <div
+                key={index}
+                className="bg-primary-50 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300"
+              >
                 <h3 className="font-poppins font-semibold text-lg text-primary-800 mb-3">
                   {faq.question}
                 </h3>
