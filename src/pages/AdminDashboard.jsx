@@ -145,6 +145,24 @@ const AdminDashboard = () => {
           <h2 className="text-lg font-semibold mb-2">Monthly Reports</h2>
           <p className="text-3xl font-bold text-primary-600">View</p>
         </div>
+        {/* Subscriber Management */}
+      <div
+  onClick={() => navigate("/admin/subscribers")}
+  className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+>
+  <h2 className="text-lg font-semibold mb-2">Subscriber Management</h2>
+  <p className="text-3xl font-bold text-primary-600">Manage</p>
+</div>
+{/* Settings Page (Static) */}
+<div
+  onClick={() => navigate("/admin/settings")}
+  className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+>
+  <h2 className="text-lg font-semibold mb-2">Settings</h2>
+  <p className="text-3xl font-bold text-primary-600">⚙️</p>
+</div>
+
+
       </div>
     </div>
   );
