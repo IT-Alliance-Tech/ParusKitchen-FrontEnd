@@ -354,3 +354,75 @@ export const fetchPlans = async () => {
   if (!res.ok) throw new Error('Failed to fetch plans');
   return res.json();
 };
+
+
+// Helper to include token
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return { Authorization: `Bearer ${token}` };
+};
+
+// ============== Dashboard APIs ==============
+export const getCurrentSubscription = async () => {
+  const res = await axios.get(`${BASE_URL}/dashboard/current-subscription`, {
+    headers: getAuthHeaders(),
+  });
+  return res.data;
+};
+
+export const getUpcomingMenu = async () => {
+  const res = await axios.get(`${BASE_URL}/dashboard/upcoming-menu`, {
+    headers: getAuthHeaders(),
+  });
+  return res.data;
+};
+
+export const pauseSubscription = async () => {
+  const res = await axios.post(
+    `${BASE_URL}/dashboard/subscription/pause`,
+    {},
+    { headers: getAuthHeaders() }
+  );
+  return res.data;
+};
+
+export const resumeSubscription = async () => {
+  const res = await axios.post(
+    `${BASE_URL}/dashboard/subscription/resume`,
+    {},
+    { headers: getAuthHeaders() }
+  );
+  return res.data;
+};
+
+export const cancelSubscription = async () => {
+  const res = await axios.post(
+    `${BASE_URL}/dashboard/subscription/cancel`,
+    {},
+    { headers: getAuthHeaders() }
+  );
+  return res.data;
+};
+
+export const renewSubscription = async () => {
+  const res = await axios.post(
+    `${BASE_URL}/dashboard/subscription/renew`,
+    {},
+    { headers: getAuthHeaders() }
+  );
+  return res.data;
+};
+
+export const getInvoices = async () => {
+  const res = await axios.get(`${BASE_URL}/dashboard/invoices`, {
+    headers: getAuthHeaders(),
+  });
+  return res.data;
+};
+
+export const updateProfile = async (data) => {
+  const res = await axios.put(`${BASE_URL}/dashboard/update-profile`, data, {
+    headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
+  });
+  return res.data;
+};

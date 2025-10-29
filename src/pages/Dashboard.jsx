@@ -1,90 +1,112 @@
 // src/pages/Dashboard.jsx
 import React, { useEffect, useState } from "react";
+import {
+  getCurrentSubscription,
+  getUpcomingMenu,
+  pauseSubscription,
+  resumeSubscription,
+  cancelSubscription,
+  renewSubscription,
+  getInvoices,
+  updateProfile,
+} from "../api";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [subscription, setSubscription] = useState(null);
   const [upcomingMenu, setUpcomingMenu] = useState([]);
-  const [payments, setPayments] = useState([]);
+  const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({ address: "", contact: "" });
+  const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
 
+  // Fetch everything when the page loads
   useEffect(() => {
-    // Dummy mock data for now
-    const dummyData = {
-      user: {
-        name: "Hrudhay",
-        email: "hrudhay@example.com",
-        address: "Bangalore, India",
-        contact: "+91 9876543210",
-      },
-      subscription: {
-        planName: "Premium Weekly Plan",
-        price: 1499,
-        startDate: "2025-10-20",
-        endDate: "2025-10-27",
-        status: "active",
-        remainingDays: 2,
-      },
-      upcomingMenu: [
-        { day: "Monday", meal: "Paneer Butter Masala with Roti" },
-        { day: "Tuesday", meal: "Veg Biryani with Raita" },
-        { day: "Wednesday", meal: "Rajma Chawal" },
-      ],
-      payments: [
-        {
-          id: "INV001",
-          date: "2025-10-20",
-          amount: 1499,
-          status: "Paid",
-        },
-        {
-          id: "INV002",
-          date: "2025-09-20",
-          amount: 1499,
-          status: "Paid",
-        },
-      ],
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const [subData, menuData, invoiceData] = await Promise.all([
+          getCurrentSubscription(),
+          getUpcomingMenu(),
+          getInvoices(),
+        ]);
+
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+          setFormData({
+            name: parsedUser.name || "",
+            phone: parsedUser.phone || "",
+            address: parsedUser.address || "",
+          });
+        }
+
+        setSubscription(subData || null);
+        setUpcomingMenu(menuData || []);
+        setInvoices(invoiceData || []);
+      } catch (err) {
+        console.error("Dashboard data fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    setTimeout(() => {
-      setUser(dummyData.user);
-      setSubscription(dummyData.subscription);
-      setUpcomingMenu(dummyData.upcomingMenu);
-      setPayments(dummyData.payments);
-      setFormData({
-        address: dummyData.user.address,
-        contact: dummyData.user.contact,
-      });
-      setLoading(false);
-    }, 1000);
+    fetchData();
   }, []);
 
-  const handlePause = () => alert("Subscription paused (mock)");
-  const handleResume = () => alert("Subscription resumed (mock)");
-  const handleCancel = () => alert("Subscription cancelled (mock)");
-  const handleRenew = () => alert("Subscription renewed (mock)");
-  const handleSave = () => {
-    alert("Profile updated (mock)");
-    setEditMode(false);
+  // Handlers for subscription actions
+  const handlePause = async () => {
+    await pauseSubscription();
+    alert("Subscription paused successfully!");
+    window.location.reload();
   };
 
-  if (loading) {
+  const handleResume = async () => {
+    await resumeSubscription();
+    alert("Subscription resumed successfully!");
+    window.location.reload();
+  };
+
+  const handleCancel = async () => {
+    await cancelSubscription();
+    alert("Subscription cancelled successfully!");
+    window.location.reload();
+  };
+
+  const handleRenew = async () => {
+    await renewSubscription();
+    alert("Subscription renewed successfully!");
+    window.location.reload();
+  };
+
+  const handleSave = async () => {
+    try {
+      const updated = await updateProfile(formData);
+      alert("Profile updated successfully!");
+      localStorage.setItem("user", JSON.stringify(updated.user));
+      setUser(updated.user);
+      setEditMode(false);
+    } catch (err) {
+      alert("Error updating profile!");
+    }
+  };
+
+  if (loading)
     return (
       <div className="flex items-center justify-center h-[80vh] text-gray-700 text-lg">
         Loading your dashboard...
       </div>
     );
-  }
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-10">
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl font-bold text-primary-800 mb-6">
-        Welcome back, {user?.name} 👋
+        Welcome back, {user?.name || "User"} 👋
       </h1>
 
-      {/* Current Subscription */}
+      {/* ================= CURRENT SUBSCRIPTION ================= */}
       <section className="bg-white shadow rounded-xl p-6 mb-8">
         <h2 className="text-2xl font-semibold mb-4">Current Subscription</h2>
         {subscription ? (
@@ -96,8 +118,9 @@ const Dashboard = () => {
               <strong>Price:</strong> ₹{subscription.price}
             </p>
             <p className="text-gray-700 mb-1">
-              <strong>Duration:</strong> {subscription.startDate} →{" "}
-              {subscription.endDate}
+              <strong>Duration:</strong>{" "}
+              {new Date(subscription.startDate).toLocaleDateString()} →{" "}
+              {new Date(subscription.endDate).toLocaleDateString()}
             </p>
             <p className="text-gray-700 mb-3">
               <strong>Remaining Days:</strong> {subscription.remainingDays}
@@ -114,7 +137,7 @@ const Dashboard = () => {
               {subscription.status.toUpperCase()}
             </p>
 
-            <div className="space-x-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={handlePause}
                 className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
@@ -146,14 +169,15 @@ const Dashboard = () => {
         )}
       </section>
 
-      {/* Upcoming Menu */}
+      {/* ================= UPCOMING MENU ================= */}
       <section className="bg-white shadow rounded-xl p-6 mb-8">
         <h2 className="text-2xl font-semibold mb-4">Upcoming Menu</h2>
         {upcomingMenu.length > 0 ? (
-          <ul className="list-disc ml-6 text-gray-700">
+          <ul className="list-disc ml-6 text-gray-700 space-y-1">
             {upcomingMenu.map((item, index) => (
-              <li key={index} className="mb-1">
-                <strong>{item.day}:</strong> {item.meal}
+              <li key={index}>
+                <strong>{new Date(item.date).toLocaleDateString()}:</strong>{" "}
+                {item.mealName} ({item.planType})
               </li>
             ))}
           </ul>
@@ -162,31 +186,32 @@ const Dashboard = () => {
         )}
       </section>
 
-      {/* Payment History */}
-      <section className="bg-white shadow rounded-xl p-6 mb-8">
+      {/* ================= PAYMENT HISTORY ================= */}
+      <section className="bg-white shadow rounded-xl p-6 mb-8 overflow-x-auto">
         <h2 className="text-2xl font-semibold mb-4">Payment History</h2>
-        {payments.length > 0 ? (
-          <table className="w-full border text-left text-gray-700">
+        {invoices.length > 0 ? (
+          <table className="min-w-full border text-left text-gray-700 text-sm">
             <thead>
               <tr className="bg-gray-100">
-                <th className="p-3 border">Invoice ID</th>
                 <th className="p-3 border">Date</th>
                 <th className="p-3 border">Amount</th>
-                <th className="p-3 border">Status</th>
-                <th className="p-3 border">Action</th>
+                <th className="p-3 border">Invoice</th>
               </tr>
             </thead>
             <tbody>
-              {payments.map((p) => (
-                <tr key={p.id}>
-                  <td className="p-3 border">{p.id}</td>
-                  <td className="p-3 border">{p.date}</td>
-                  <td className="p-3 border">₹{p.amount}</td>
-                  <td className="p-3 border">{p.status}</td>
+              {invoices.map((inv, i) => (
+                <tr key={i}>
                   <td className="p-3 border">
-                    <button className="text-blue-600 hover:underline">
-                      Download
-                    </button>
+                    {new Date(inv.date).toLocaleDateString()}
+                  </td>
+                  <td className="p-3 border">₹{inv.amount}</td>
+                  <td className="p-3 border">
+                    <a
+                      href={inv.invoiceLink}
+                      className="text-blue-600 hover:underline"
+                    >
+                      View / Download
+                    </a>
                   </td>
                 </tr>
               ))}
@@ -197,7 +222,7 @@ const Dashboard = () => {
         )}
       </section>
 
-      {/* Profile / Contact Info */}
+      {/* ================= PROFILE / CONTACT INFO ================= */}
       <section className="bg-white shadow rounded-xl p-6">
         <h2 className="text-2xl font-semibold mb-4">
           Delivery Address & Contact Info
@@ -207,23 +232,26 @@ const Dashboard = () => {
           <div className="space-y-4">
             <input
               type="text"
-              value={formData.address}
-              onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
-              }
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full border rounded px-3 py-2"
-              placeholder="Enter new address"
+              placeholder="Enter your name"
             />
             <input
               type="text"
-              value={formData.contact}
-              onChange={(e) =>
-                setFormData({ ...formData, contact: e.target.value })
-              }
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               className="w-full border rounded px-3 py-2"
-              placeholder="Enter new contact"
+              placeholder="Enter contact number"
             />
-            <div className="space-x-3">
+            <textarea
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              className="w-full border rounded px-3 py-2"
+              placeholder="Enter your address"
+              rows={3}
+            />
+            <div className="flex gap-3">
               <button
                 onClick={handleSave}
                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
@@ -241,10 +269,13 @@ const Dashboard = () => {
         ) : (
           <>
             <p className="text-gray-700 mb-2">
-              <strong>Address:</strong> {user.address}
+              <strong>Name:</strong> {user?.name}
             </p>
             <p className="text-gray-700 mb-2">
-              <strong>Contact:</strong> {user.contact}
+              <strong>Phone:</strong> {user?.phone}
+            </p>
+            <p className="text-gray-700 mb-2">
+              <strong>Address:</strong> {user?.address}
             </p>
             <button
               onClick={() => setEditMode(true)}
