@@ -24,6 +24,10 @@ import ActiveSubscribers from "./pages/ActiveSubscribers";
 import Deliveries from "./pages/Deliveries";
 import ExpiringSubscriptions from "./pages/ExpiringSubscriptions";
 import MonthlyReports from "./pages/MonthlyReports";
+import SubscriberManagement from "./pages/SubscriberManagement";
+import AdminSettings from "./pages/AdminSettings";
+import CommunicationAutomation from "./pages/CommunicationAutomation";
+
 
 
 
@@ -59,6 +63,10 @@ function App() {
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/expiring-subscriptions" element={<ExpiringSubscriptions />} />
             <Route path="/reports" element={<MonthlyReports />} />
+            <Route path="/admin/subscribers" element={<SubscriberManagement />} />
+            <Route path="/admin/settings" element={<AdminSettings />} />
+            <Route path="/admin/communication" element={<CommunicationAutomation />} />
+
 
 
 
