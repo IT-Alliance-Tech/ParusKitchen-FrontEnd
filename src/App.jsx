@@ -20,6 +20,11 @@ import LoginPage from "./pages/LoginPage";
 import OrdersPage from "./pages/OrdersPage";
 import UserProfile from "./pages/UserProfile";
 import Dashboard from "./pages/Dashboard";
+import ActiveSubscribers from "./pages/ActiveSubscribers";
+import Deliveries from "./pages/Deliveries";
+import ExpiringSubscriptions from "./pages/ExpiringSubscriptions";
+import MonthlyReports from "./pages/MonthlyReports";
+
 
 
 // Admin Pages
@@ -28,6 +33,7 @@ import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminMealsPage from "./pages/AdminMealsPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
+
 
 function App() {
   return (
@@ -49,6 +55,11 @@ function App() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/active-subscribers" element={<ActiveSubscribers />} />
+            <Route path="/deliveries" element={<Deliveries />} />
+            <Route path="/expiring-subscriptions" element={<ExpiringSubscriptions />} />
+            <Route path="/reports" element={<MonthlyReports />} />
+
 
 
             {/* ---------- ADMIN ROUTES ---------- */}
