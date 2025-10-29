@@ -100,11 +100,50 @@ const AdminDashboard = () => {
         </div>
 
         {/* Revenue */}
-        <div className="bg-white p-6 rounded-xl shadow-md text-center">
+        <div
+          onClick={() => navigate("/admin/revenue")}
+          className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+        >
           <h2 className="text-lg font-semibold mb-2">Revenue</h2>
           <p className="text-3xl font-bold text-primary-600">
             ₹{totals.revenue.toLocaleString()}
           </p>
+        </div>
+
+        {/* Active Subscribers */}
+        <div
+          onClick={() => navigate("/active-subscribers")}
+          className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+        >
+          <h2 className="text-lg font-semibold mb-2">Active Subscribers</h2>
+          <p className="text-3xl font-bold text-primary-600">52</p>
+        </div>
+
+        {/* Deliveries */}
+        <div
+          onClick={() => navigate("/deliveries")}
+          className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+        >
+          <h2 className="text-lg font-semibold mb-2">Deliveries Today</h2>
+          <p className="text-3xl font-bold text-primary-600">145</p>
+        </div>
+
+        {/* Expiring Subscriptions */}
+        <div
+          onClick={() => navigate("/expiring-subscriptions")}
+          className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+        >
+          <h2 className="text-lg font-semibold mb-2">Expiring Soon</h2>
+          <p className="text-3xl font-bold text-primary-600">8</p>
+        </div>
+
+        {/* Monthly Reports */}
+        <div
+          onClick={() => navigate("/reports")}
+          className="bg-white p-6 rounded-xl shadow-md text-center cursor-pointer hover:bg-gray-100 transition"
+        >
+          <h2 className="text-lg font-semibold mb-2">Monthly Reports</h2>
+          <p className="text-3xl font-bold text-primary-600">View</p>
         </div>
       </div>
     </div>
