@@ -10,23 +10,20 @@ const Header = () => {
   const navigate = useNavigate();
   const dropdownRef = useRef();
 
-  // Check if user is logged in (from localStorage) on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     try {
       if (storedUser) setUser(JSON.parse(storedUser));
-    } catch (error) {
-      console.warn('Invalid user data in localStorage. Clearing...');
+    } catch {
       localStorage.removeItem('user');
       setUser(null);
     }
 
-    // Listen for storage changes (login/logout from other tabs)
     const handleStorageChange = () => {
       const updatedUser = localStorage.getItem('user');
       try {
         setUser(updatedUser ? JSON.parse(updatedUser) : null);
-      } catch (error) {
+      } catch {
         localStorage.removeItem('user');
         setUser(null);
       }
@@ -35,7 +32,6 @@ const Header = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -48,7 +44,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('token'); // optional but recommended
+    localStorage.removeItem('token');
     setUser(null);
     setIsDropdownOpen(false);
     navigate('/login');
@@ -69,7 +65,6 @@ const Header = () => {
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <ChefHat className="h-8 w-8 text-primary-600" />
             <span className="font-poppins font-bold text-2xl text-primary-800">
@@ -103,7 +98,6 @@ const Header = () => {
               Subscribe Now
             </Link>
 
-            {/* Login/Signup or User Profile */}
             {!user ? (
               <Link
                 to="/login"
@@ -120,7 +114,7 @@ const Header = () => {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 />
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                     <Link
                       to="/user-profile"
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -134,6 +128,13 @@ const Header = () => {
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       Dashboard
+                    </Link>
+                    <Link
+                      to="/order-history"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Order History
                     </Link>
                     <button
                       onClick={handleLogout}
@@ -176,7 +177,6 @@ const Header = () => {
               </Link>
             ))}
 
-            {/* Mobile Login/Signup or Profile */}
             {!user ? (
               <Link
                 to="/login"
@@ -200,6 +200,13 @@ const Header = () => {
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
                   Dashboard
+                </Link>
+                <Link
+                  to="/order-history"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Order History
                 </Link>
                 <button
                   onClick={() => {

@@ -14,14 +14,52 @@ const CartPage = () => {
     address: "",
   });
 
+  // Fetch cart data (from API or static fallback)
   useEffect(() => {
     const fetchCart = async () => {
       setLoading(true);
       try {
         const cart = await getCart();
-        setCartItems(cart || []);
+        if (cart && cart.length > 0) {
+          setCartItems(cart);
+        } else {
+          // Static fallback data for demo
+          setCartItems([
+            {
+              _id: "1",
+              name: "Lunch + Dinner Plan",
+              itemType: "Monthly Subscription",
+              price: 5750,
+              quantity: 1,
+            },
+            {
+              _id: "2",
+              name: "Breakfast Only Plan",
+              itemType: "Monthly Subscription",
+              price: 1800,
+              quantity: 1,
+            },
+          ]);
+        }
       } catch (err) {
         console.error("Error fetching cart:", err);
+        // Use static data if API fails
+        setCartItems([
+          {
+            _id: "1",
+            name: "Lunch + Dinner Plan",
+            itemType: "Monthly Subscription",
+            price: 5750,
+            quantity: 1,
+          },
+          {
+            _id: "2",
+            name: "Breakfast Only Plan",
+            itemType: "Monthly Subscription",
+            price: 1800,
+            quantity: 1,
+          },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -40,10 +78,14 @@ const CartPage = () => {
     alert("Delivery details submitted successfully!");
   };
 
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const deliveryFee = 500;
+  const total = subtotal + deliveryFee;
+
   if (loading) return <p className="text-center mt-10">Loading cart...</p>;
 
   return (
-    <div className="max-w-5xl mx-auto p-4 space-y-10">
+    <div className="max-w-6xl mx-auto p-4 space-y-10">
       {/* Cart Section */}
       <section>
         <h2 className="text-3xl font-bold mb-6 text-primary-800 text-center">My Cart</h2>
@@ -51,21 +93,40 @@ const CartPage = () => {
         {cartItems.length === 0 ? (
           <p className="text-center text-gray-600 mb-4">Your cart is empty</p>
         ) : (
-          <div className="space-y-4">
-            {cartItems.map((item) => (
-              <div
-                key={item._id}
-                className="border rounded-lg p-4 shadow-md flex justify-between items-center hover:shadow-lg transition"
-              >
-                <div>
-                  <h3 className="text-xl font-semibold text-primary-800">{item.name}</h3>
-                  <p className="text-gray-700">Type: {item.itemType}</p>
-                  <p className="font-medium text-gray-800">Price: ₹{item.price}</p>
-                  <p className="font-medium text-gray-800">Quantity: {item.quantity}</p>
+          <>
+            <div className="space-y-4">
+              {cartItems.map((item) => (
+                <div
+                  key={item._id}
+                  className="border rounded-lg p-4 shadow-md flex justify-between items-center hover:shadow-lg transition"
+                >
+                  <div>
+                    <h3 className="text-xl font-semibold text-primary-800">{item.name}</h3>
+                    <p className="text-gray-700">{item.itemType}</p>
+                    <p className="font-medium text-gray-800">Price: ₹{item.price}</p>
+                    <p className="font-medium text-gray-800">Quantity: {item.quantity}</p>
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            {/* Summary Section */}
+            <div className="mt-8 bg-white shadow-lg rounded-2xl p-6 border border-gray-200">
+              <h3 className="text-2xl font-bold text-primary-800 mb-4">Order Summary</h3>
+              <div className="space-y-2 text-lg">
+                <p className="flex justify-between">
+                  <span>Subtotal:</span> <span>₹{subtotal}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span>Delivery Fee:</span> <span>₹{deliveryFee}</span>
+                </p>
+                <hr className="my-2" />
+                <p className="flex justify-between font-bold text-xl text-primary-700">
+                  <span>Total:</span> <span>₹{total}</span>
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          </>
         )}
       </section>
 

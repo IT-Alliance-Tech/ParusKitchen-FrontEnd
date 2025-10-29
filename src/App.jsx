@@ -27,7 +27,8 @@ import MonthlyReports from "./pages/MonthlyReports";
 import SubscriberManagement from "./pages/SubscriberManagement";
 import AdminSettings from "./pages/AdminSettings";
 import CommunicationAutomation from "./pages/CommunicationAutomation";
-
+import FeedbackPage from "./pages/FeedbackPage";
+import OrderHistoryPage from "./pages/OrderHistoryPage";
 
 
 
@@ -66,6 +67,9 @@ function App() {
             <Route path="/admin/subscribers" element={<SubscriberManagement />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
             <Route path="/admin/communication" element={<CommunicationAutomation />} />
+            <Route path="/feedback" element={<FeedbackPage/>}/>
+            <Route path="/order-history" element={<OrderHistoryPage />} />
+
 
 
 

@@ -6,7 +6,22 @@ import {
   getAdminTotalUsers,
   getAdminRevenue,
 } from "../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";   
+import { Bar, Line, Pie } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Title, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 
 const AdminDashboard = () => {
   const [totals, setTotals] = useState({
@@ -172,7 +187,110 @@ const AdminDashboard = () => {
 
 
 
+
       </div>
+      {/* Reports & Graphs Section */}
+<div className="mt-12 bg-white p-8 rounded-xl shadow-md">
+  <h2 className="text-2xl font-bold mb-6 text-primary-800 text-center">
+    Reports & Analytics
+  </h2>
+
+  {/* Charts Row */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {/* Monthly Revenue Line Chart */}
+    <div className="h-[250px] flex flex-col items-center">
+      <h3 className="text-lg font-semibold mb-3 text-center">
+        Monthly Revenue Overview
+      </h3>
+      <div className="w-full max-w-[400px] h-[180px]">
+        <Line
+          data={{
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            datasets: [
+              {
+                label: "Revenue (₹)",
+                data: [40000, 55000, 70000, 50000, 85000, 95000, 120000],
+                borderColor: "rgba(75,192,192,1)",
+                backgroundColor: "rgba(75,192,192,0.2)",
+                fill: true,
+                tension: 0.4,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: "top" } },
+            scales: {
+              y: { ticks: { stepSize: 20000 } },
+            },
+          }}
+        />
+      </div>
+    </div>
+
+    {/* Orders by Meal Type - Bar Chart */}
+    <div className="h-[250px] flex flex-col items-center">
+      <h3 className="text-lg font-semibold mb-3 text-center">
+        Orders by Meal Type
+      </h3>
+      <div className="w-full max-w-[400px] h-[180px]">
+        <Bar
+          data={{
+            labels: ["Breakfast", "Lunch", "Dinner"],
+            datasets: [
+              {
+                label: "Orders",
+                data: [120, 250, 180],
+                backgroundColor: [
+                  "rgba(255,99,132,0.6)",
+                  "rgba(54,162,235,0.6)",
+                  "rgba(255,206,86,0.6)",
+                ],
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+          }}
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* Subscription Distribution - Pie Chart */}
+  <div className="mt-10 flex justify-center">
+    <div className="w-[250px] h-[250px]">
+      <h3 className="text-lg font-semibold mb-3 text-center">
+        Subscription Type Distribution
+      </h3>
+      <Pie
+        data={{
+          labels: ["Weekly", "Monthly", "Quarterly"],
+          datasets: [
+            {
+              data: [30, 50, 20],
+              backgroundColor: [
+                "rgba(255,159,64,0.7)",
+                "rgba(153,102,255,0.7)",
+                "rgba(255,205,86,0.7)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        }}
+        options={{
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: "bottom" } },
+        }}
+      />
+    </div>
+  </div>
+</div>
+
     </div>
   );
 };

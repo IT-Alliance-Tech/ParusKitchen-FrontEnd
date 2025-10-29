@@ -158,9 +158,9 @@ const HowItWorksPage = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* FAQ Section (Updated Layout) */}
       <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="font-poppins font-bold text-3xl lg:text-4xl text-primary-800 mb-4">
               Frequently Asked Questions
@@ -169,9 +169,11 @@ const HowItWorksPage = () => {
               Got questions? We have answers to help you get started.
             </p>
           </div>
-          <div className="space-y-6">
+
+          {/* ✅ Updated grid layout for side-by-side FAQ cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {faqs.map((faq, index) => (
-              <div key={index} className="bg-primary-50 rounded-2xl p-6">
+              <div key={index} className="bg-primary-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                 <h3 className="font-poppins font-semibold text-lg text-primary-800 mb-3">
                   {faq.question}
                 </h3>
