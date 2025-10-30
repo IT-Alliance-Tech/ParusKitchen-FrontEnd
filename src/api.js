@@ -465,3 +465,49 @@ export const updateProfile = async (data) => {
   });
   return res.data;
 };
+
+
+
+
+// -------------------------
+// 🧾 Admin User Subscriptions APIs
+// -------------------------
+const ADMIN_BASE_URL = "http://localhost:5000/api/admin/user-subscriptions";
+
+// ✅ Get all subscriptions
+export const getAllUserSubscriptions = async (token) => {
+  const res = await fetch(ADMIN_BASE_URL, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.json();
+};
+
+// ✅ Get single subscription by ID
+export const getUserSubscriptionById = async (id, token) => {
+  const res = await fetch(`${ADMIN_BASE_URL}/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.json();
+};
+
+// ✅ Update subscription
+export const updateUserSubscription = async (id, data, token) => {
+  const res = await fetch(`${ADMIN_BASE_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
+
+// ✅ Delete subscription
+export const deleteUserSubscription = async (id, token) => {
+  const res = await fetch(`${ADMIN_BASE_URL}/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.json();
+};
