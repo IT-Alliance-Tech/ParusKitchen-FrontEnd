@@ -72,20 +72,25 @@ export const updateUserProfile = async (data) => {
 
 // ====================== MEALS ======================
 export const getMeals = async () => {
-  
   try {
-  console.log("apiiii");
-
+    console.log("📡 Fetching meals from:", `${BASE_URL}/meals`);
     const response = await axios.get(`${BASE_URL}/meals`);
-
-    console.log(response, "new pi");
-    
+    console.log("✅ Meals API Response:", response.data);
     return response.data;
   } catch (error) {
-    handleApiError(error, "Get meals");
-
-    console.log(error);
-    
+    console.error("❌ Meals fetch failed. Checking fallback route...");
+    // Fallback: Try /admin/dashboard/meals if /meals fails
+    try {
+      const fallbackResponse = await axios.get(`${BASE_URL}/admin/dashboard/meals`, {
+        headers: getAuthHeader(),
+      });
+      console.log("✅ Fallback Meals API Response:", fallbackResponse.data);
+      return fallbackResponse.data;
+    } catch (fallbackError) {
+      console.error("❌ Both /meals and fallback failed");
+      handleApiError(error, "Get meals");
+      return [];
+    }
   }
 };
 
@@ -211,22 +216,54 @@ export const getCart = async () => {
   }
 };
 
-// ✅ FIXED addToCart to properly work with subscriptions and handle unauthorized users
-export const addToCart = async (cartItem) => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    throw new Error("User not logged in");
-  }
-
+// ✅ Final, intelligent addToCart() — fixes all known issues
+export const addToCart = async (itemOrId, maybeType) => {
   try {
-    const response = await axios.post(`${BASE_URL}/cart`, cartItem, {
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    // Accept both: addToCart(itemId, itemType) or addToCart({ itemId, itemType, quantity })
+    let itemId;
+    let itemType = maybeType;
+    let quantity = 1;
+
+    if (typeof itemOrId === "object" && itemOrId !== null) {
+      itemId = itemOrId.itemId || itemOrId.id || itemOrId._id;
+      itemType = itemOrId.itemType || itemOrId.type || itemType;
+      quantity = itemOrId.quantity || quantity;
+    } else {
+      itemId = itemOrId;
+    }
+
+    // Basic validation
+    if (!itemId || typeof itemId !== "string") throw new Error("Missing or invalid itemId");
+
+    if (!itemType) {
+      // default to menu/meal if not provided
+      itemType = "menu";
+    }
+
+    // Token — require auth to add to cart
+    const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+    if (!token) throw new Error("No token provided");
+
+    // Build payload expected by backend: itemType, itemId, quantity
+    const payload = { itemType, itemId, quantity };
+
+    console.log("🛒 Sending to backend:", payload);
+
+    const response = await axios.post(`${BASE_URL}/cart`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
+
+    console.log("✅ Item added to cart:", response.data);
     return response.data;
   } catch (error) {
     handleApiError(error, "Add to cart");
+    throw error;
   }
 };
+
 
 export const updateCartItem = async (id, cartItem) => {
   try {
@@ -281,6 +318,7 @@ export const subscribeToPlan = async (subscriptionData) => {
     handleApiError(error, "Subscribe to plan");
   }
 };
+
 // ====================== ADMIN DASHBOARD STATS ======================
 export const getAdminTotalOrders = async () => {
   try {
@@ -315,7 +353,6 @@ export const getAdminTotalUsers = async () => {
   }
 };
 
-// ✅ Fix: add getAdminRevenue back
 export const getAdminRevenue = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/admin/dashboard/revenue`, {
@@ -326,6 +363,7 @@ export const getAdminRevenue = async () => {
     handleApiError(error, "Get admin revenue");
   }
 };
+
 // ====================== ADMIN MEALS ======================
 export const getAllMeals = async () => {
   try {
@@ -337,6 +375,7 @@ export const getAllMeals = async () => {
     handleApiError(error, "Get all meals");
   }
 };
+
 // ====================== ADMIN ORDERS ======================
 export const getAdminOrders = async () => {
   try {
@@ -348,13 +387,13 @@ export const getAdminOrders = async () => {
     handleApiError(error, "Get admin orders");
   }
 };
-// src/api.js
+
+// ====================== PLANS ======================
 export const fetchPlans = async () => {
   const res = await fetch('/api/plans');
   if (!res.ok) throw new Error('Failed to fetch plans');
   return res.json();
 };
-
 
 // Helper to include token
 const getAuthHeaders = () => {

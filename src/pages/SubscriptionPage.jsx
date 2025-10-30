@@ -38,7 +38,8 @@ const SubscriptionPage = () => {
     }
 
     try {
-      await addToCart({ itemType: "subscription", itemId: subscriptionId, quantity: 1 });
+      // call addToCart with (itemId, itemType) signature
+      await addToCart(subscriptionId, "subscription");
       alert("Subscription added to cart successfully!");
       navigate("/cart"); // Redirect to cart after adding
     } catch (err) {

@@ -28,9 +28,11 @@ const MenuPage = () => {
   const lunchMeals = meals.slice(0, Math.ceil(meals.length / 2));
   const dinnerMeals = meals.slice(Math.ceil(meals.length / 2));
 
+  // ✅ FIXED FUNCTION
   const handleAddToCart = async (meal) => {
     try {
-      await addToCart({ mealId: meal._id, quantity: 1 });
+      // call addToCart with (itemId, itemType) — api.addToCart expects these params
+      await addToCart(meal._id, "meal");
       alert(`${meal.name} added to cart!`);
     } catch (err) {
       console.error("Add to cart error:", err);
