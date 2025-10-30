@@ -20,6 +20,10 @@ import LoginPage from "./pages/LoginPage";
 import OrdersPage from "./pages/OrdersPage";
 import UserProfile from "./pages/UserProfile";
 import Dashboard from "./pages/Dashboard";
+import AdminMenuPage from "./pages/AdminMenuPage";
+import AdminDeliveryPage from "./pages/AdminDeliveryPage";
+import AdminPaymentPage from "./pages/AdminPaymentPage";
+import UserPaymentHistory from "./pages/UserPaymentHistory";
 
 
 // Admin Pages
@@ -50,6 +54,11 @@ function App() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            {/* ---------- ADMIN ROUTES ---------- */}
+<Route path="/admin/menu-management" element={<AdminMenuPage />} />
+<Route path="/admin/delivery-management" element={<AdminDeliveryPage />} />
+<Route path="/admin/payment-management" element={<AdminPaymentPage />} />
+<Route path="/user-payments" element={<UserPaymentHistory />} />
 
 
             {/* ---------- ADMIN ROUTES ---------- */}
