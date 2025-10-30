@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function UserPaymentHistory() {
   const invoices = [
@@ -7,15 +7,27 @@ export default function UserPaymentHistory() {
     { id: "INV003", date: "2025-08-20", plan: "Breakfast Only", amount: 1800, mode: "Card", status: "Pending" },
   ];
 
-  const totalPaid = invoices.filter(i => i.status === "Paid").reduce((s, i) => s + i.amount, 0);
-  const totalPending = invoices.filter(i => i.status === "Pending").reduce((s, i) => s + i.amount, 0);
+  const [filter, setFilter] = useState("All");
+
+  // Filtered data based on current filter
+  const filteredInvoices =
+    filter === "All" ? invoices : invoices.filter((inv) => inv.status === filter);
+
+  const totalPaid = invoices
+    .filter((i) => i.status === "Paid")
+    .reduce((s, i) => s + i.amount, 0);
+  const totalPending = invoices
+    .filter((i) => i.status === "Pending")
+    .reduce((s, i) => s + i.amount, 0);
   const grandTotal = invoices.reduce((s, i) => s + i.amount, 0);
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <h1 className="text-3xl font-bold mb-6 text-center text-primary-800">My Payments &amp; Billing</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center text-primary-800">
+          My Payments & Billing
+        </h1>
 
         {/* Summary Card */}
         <div className="bg-white shadow-md rounded-lg p-4 mb-6 text-center">
@@ -25,16 +37,27 @@ export default function UserPaymentHistory() {
           </p>
         </div>
 
-        {/* Filters (UI only) */}
+        {/* Filters */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex gap-2">
-            <button className="px-3 py-1 rounded-md border bg-white text-sm">All</button>
-            <button className="px-3 py-1 rounded-md border bg-white text-sm">Paid</button>
-            <button className="px-3 py-1 rounded-md border bg-white text-sm">Pending</button>
+            {["All", "Paid", "Pending"].map((status) => (
+              <button
+                key={status}
+                onClick={() => setFilter(status)}
+                className={`px-3 py-1 rounded-md border text-sm transition-all ${
+                  filter === status
+                    ? "bg-primary-600 text-white border-primary-600"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {status}
+              </button>
+            ))}
           </div>
 
           <div className="text-sm text-gray-500">
-            Showing <span className="font-medium">{invoices.length}</span> invoices
+            Showing <span className="font-medium">{filteredInvoices.length}</span>{" "}
+            invoices
           </div>
         </div>
 
@@ -53,7 +76,7 @@ export default function UserPaymentHistory() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
-              {invoices.map((inv) => (
+              {filteredInvoices.map((inv) => (
                 <tr key={inv.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm text-gray-700">{inv.id}</td>
                   <td className="px-4 py-3 text-sm text-gray-700">{inv.date}</td>
@@ -72,7 +95,6 @@ export default function UserPaymentHistory() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-center">
-                    {/* Non-functional download button */}
                     <button
                       className="inline-flex items-center gap-2 px-3 py-1 rounded-md border text-sm bg-white hover:bg-gray-50"
                       onClick={() => alert(`Download invoice ${inv.id} (static demo)`)}
@@ -84,10 +106,12 @@ export default function UserPaymentHistory() {
               ))}
             </tbody>
 
-            {/* Footer summary row (optional) */}
+            {/* Footer summary row */}
             <tfoot>
               <tr>
-                <td colSpan={3} className="px-4 py-3 text-sm font-medium text-gray-700">Summary</td>
+                <td colSpan={3} className="px-4 py-3 text-sm font-medium text-gray-700">
+                  Summary
+                </td>
                 <td className="px-4 py-3 text-sm font-semibold text-right">₹{grandTotal}</td>
                 <td colSpan={3}></td>
               </tr>
@@ -95,7 +119,7 @@ export default function UserPaymentHistory() {
           </table>
         </div>
 
-        {/* Small help text */}
+        {/* Help Text */}
         <div className="mt-4 text-sm text-gray-500 text-center">
           This is a static demo page. Integrate with your backend to show real invoices and enable actual downloads.
         </div>
