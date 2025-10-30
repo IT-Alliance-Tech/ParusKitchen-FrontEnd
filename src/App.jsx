@@ -20,16 +20,6 @@ import LoginPage from "./pages/LoginPage";
 import OrdersPage from "./pages/OrdersPage";
 import UserProfile from "./pages/UserProfile";
 import Dashboard from "./pages/Dashboard";
-import ActiveSubscribers from "./pages/ActiveSubscribers";
-import Deliveries from "./pages/Deliveries";
-import ExpiringSubscriptions from "./pages/ExpiringSubscriptions";
-import MonthlyReports from "./pages/MonthlyReports";
-import SubscriberManagement from "./pages/SubscriberManagement";
-import AdminSettings from "./pages/AdminSettings";
-import CommunicationAutomation from "./pages/CommunicationAutomation";
-import FeedbackPage from "./pages/FeedbackPage";
-import OrderHistoryPage from "./pages/OrderHistoryPage";
-
 
 
 // Admin Pages
@@ -60,18 +50,6 @@ function App() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/active-subscribers" element={<ActiveSubscribers />} />
-            <Route path="/deliveries" element={<Deliveries />} />
-            <Route path="/expiring-subscriptions" element={<ExpiringSubscriptions />} />
-            <Route path="/reports" element={<MonthlyReports />} />
-            <Route path="/admin/subscribers" element={<SubscriberManagement />} />
-            <Route path="/admin/settings" element={<AdminSettings />} />
-            <Route path="/admin/communication" element={<CommunicationAutomation />} />
-            <Route path="/feedback" element={<FeedbackPage/>}/>
-            <Route path="/order-history" element={<OrderHistoryPage />} />
-
-
-
 
 
             {/* ---------- ADMIN ROUTES ---------- */}
