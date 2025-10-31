@@ -24,11 +24,12 @@ import ActiveSubscribers from "./pages/ActiveSubscribers";
 import Deliveries from "./pages/Deliveries";
 import ExpiringSubscriptions from "./pages/ExpiringSubscriptions";
 import MonthlyReports from "./pages/MonthlyReports";
-import SubscriberManagement from "./pages/SubscriberManagement";
-import AdminSettings from "./pages/AdminSettings";
-import CommunicationAutomation from "./pages/CommunicationAutomation";
-import FeedbackPage from "./pages/FeedbackPage";
-import OrderHistoryPage from "./pages/OrderHistoryPage";
+// --- Admin Pages ---
+import AdminMenuPage from "./pages/AdminMenuPage";
+import AdminDeliveryPage from "./pages/AdminDeliveryPage";
+import AdminPaymentPage from "./pages/AdminPaymentPage";
+import UserPaymentHistory from "./pages/UserPaymentHistory";
+
 
 
 
@@ -38,6 +39,10 @@ import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminMealsPage from "./pages/AdminMealsPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
+import SubscriberManagement from "./pages/SubscriberManagement";
+import AdminSettings from "./pages/AdminSettings";
+import CommunicationAutomation from "./pages/CommunicationAutomation";
+
 
 
 function App() {
@@ -60,16 +65,11 @@ function App() {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/active-subscribers" element={<ActiveSubscribers />} />
-            <Route path="/deliveries" element={<Deliveries />} />
-            <Route path="/expiring-subscriptions" element={<ExpiringSubscriptions />} />
-            <Route path="/reports" element={<MonthlyReports />} />
-            <Route path="/admin/subscribers" element={<SubscriberManagement />} />
-            <Route path="/admin/settings" element={<AdminSettings />} />
-            <Route path="/admin/communication" element={<CommunicationAutomation />} />
-            <Route path="/feedback" element={<FeedbackPage/>}/>
-            <Route path="/order-history" element={<OrderHistoryPage />} />
-
+            {/* ---------- ADMIN ROUTES ---------- */}
+<Route path="/admin/menu-management" element={<AdminMenuPage />} />
+<Route path="/admin/delivery-management" element={<AdminDeliveryPage />} />
+<Route path="/admin/payment-management" element={<AdminPaymentPage />} />
+<Route path="/user-payments" element={<UserPaymentHistory />} />
 
 
 
@@ -105,6 +105,36 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminOrdersPage />
+                </ProtectedRoute>
+              }
+            />
+            {/* Additional admin/public routes referenced from AdminDashboard cards */}
+            <Route path="/active-subscribers" element={<ActiveSubscribers />} />
+            <Route path="/deliveries" element={<Deliveries />} />
+            <Route path="/expiring-subscriptions" element={<ExpiringSubscriptions />} />
+            <Route path="/reports" element={<MonthlyReports />} />
+
+            <Route
+              path="/admin/subscribers"
+              element={
+                <ProtectedRoute>
+                  <SubscriberManagement />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute>
+                  <AdminSettings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/communication"
+              element={
+                <ProtectedRoute>
+                  <CommunicationAutomation />
                 </ProtectedRoute>
               }
             />
