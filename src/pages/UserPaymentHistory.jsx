@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Download, CreditCard, Clock, CheckCircle } from "lucide-react";
 
 export default function UserPaymentHistory() {
   const invoices = [
@@ -9,7 +10,6 @@ export default function UserPaymentHistory() {
 
   const [filter, setFilter] = useState("All");
 
-  // Filtered data based on current filter
   const filteredInvoices =
     filter === "All" ? invoices : invoices.filter((inv) => inv.status === filter);
 
@@ -22,106 +22,144 @@ export default function UserPaymentHistory() {
   const grandTotal = invoices.reduce((s, i) => s + i.amount, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-10 px-4 sm:px-8 font-inter">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <h1 className="text-3xl font-bold mb-6 text-center text-primary-800">
-          My Payments & Billing
-        </h1>
-
-        {/* Summary Card */}
-        <div className="bg-white shadow-md rounded-lg p-4 mb-6 text-center">
-          <p className="text-gray-700">
-            <strong>Total Payments:</strong> ₹{grandTotal} &nbsp; | &nbsp;
-            <strong>Pending:</strong> ₹{totalPending}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <CreditCard className="text-indigo-600" /> My Payments
+          </h1>
+          <p className="text-sm text-gray-500 mt-2 sm:mt-0">
+            Manage your recent transactions and download invoices.
           </p>
         </div>
 
+        {/* Summary Cards */}
+        <div className="grid gap-4 sm:grid-cols-3 mb-8">
+          <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-5 hover:shadow-md transition-all">
+            <p className="text-sm text-gray-500">Total Paid</p>
+            <h2 className="text-2xl font-bold text-green-600 mt-1">₹{totalPaid}</h2>
+          </div>
+          <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-5 hover:shadow-md transition-all">
+            <p className="text-sm text-gray-500">Pending</p>
+            <h2 className="text-2xl font-bold text-yellow-600 mt-1">₹{totalPending}</h2>
+          </div>
+          <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-5 hover:shadow-md transition-all">
+            <p className="text-sm text-gray-500">Total Transactions</p>
+            <h2 className="text-2xl font-bold text-indigo-600 mt-1">₹{grandTotal}</h2>
+          </div>
+        </div>
+
         {/* Filters */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex justify-between items-center mb-5">
           <div className="flex gap-2">
             {["All", "Paid", "Pending"].map((status) => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
-                className={`px-3 py-1 rounded-md border text-sm transition-all ${
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
                   filter === status
-                    ? "bg-primary-600 text-white border-primary-600"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
+                    ? "bg-indigo-600 text-white shadow"
+                    : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
                 }`}
               >
                 {status}
               </button>
             ))}
           </div>
-
-          <div className="text-sm text-gray-500">
-            Showing <span className="font-medium">{filteredInvoices.length}</span>{" "}
-            invoices
-          </div>
+          <span className="text-sm text-gray-500">
+            Showing {filteredInvoices.length} invoice(s)
+          </span>
         </div>
 
         {/* Table */}
-        <div className="bg-white shadow-sm rounded-lg overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="bg-white border border-gray-100 shadow-sm rounded-2xl overflow-hidden">
+          <table className="min-w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Invoice ID</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Date</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Plan Name</th>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-600">Amount</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Payment Mode</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Status</th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-600">Download</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Invoice ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Plan
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Amount
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Mode
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-100">
+
+            <tbody className="divide-y divide-gray-100">
               {filteredInvoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-700">{inv.id}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{inv.date}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{inv.plan}</td>
-                  <td className="px-4 py-3 text-sm text-right font-semibold text-gray-800">₹{inv.amount}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{inv.mode}</td>
-                  <td className="px-4 py-3 text-sm">
-                    <span
-                      className={
-                        inv.status === "Paid"
-                          ? "inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                          : "inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
-                      }
-                    >
-                      {inv.status}
-                    </span>
+                <tr
+                  key={inv.id}
+                  className="hover:bg-indigo-50/40 transition cursor-default"
+                >
+                  <td className="px-6 py-3 text-sm font-medium text-gray-700">
+                    {inv.id}
                   </td>
-                  <td className="px-4 py-3 text-sm text-center">
+                  <td className="px-6 py-3 text-sm text-gray-600">{inv.date}</td>
+                  <td className="px-6 py-3 text-sm text-gray-700">{inv.plan}</td>
+                  <td className="px-6 py-3 text-sm font-semibold text-right text-gray-800">
+                    ₹{inv.amount}
+                  </td>
+                  <td className="px-6 py-3 text-sm text-gray-600">{inv.mode}</td>
+                  <td className="px-6 py-3 text-sm">
+                    {inv.status === "Paid" ? (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
+                        <CheckCircle size={12} /> Paid
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-medium">
+                        <Clock size={12} /> Pending
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-6 py-3 text-center">
                     <button
-                      className="inline-flex items-center gap-2 px-3 py-1 rounded-md border text-sm bg-white hover:bg-gray-50"
-                      onClick={() => alert(`Download invoice ${inv.id} (static demo)`)}
+                      onClick={() => alert(`Downloading invoice ${inv.id}...`)}
+                      className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 font-medium text-sm transition"
                     >
-                      Download
+                      <Download size={14} /> PDF
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
 
-            {/* Footer summary row */}
-            <tfoot>
+            <tfoot className="bg-gray-50 border-t border-gray-200">
               <tr>
-                <td colSpan={3} className="px-4 py-3 text-sm font-medium text-gray-700">
-                  Summary
+                <td
+                  colSpan={3}
+                  className="px-6 py-3 text-sm font-medium text-gray-700"
+                >
+                  Total Summary
                 </td>
-                <td className="px-4 py-3 text-sm font-semibold text-right">₹{grandTotal}</td>
+                <td className="px-6 py-3 text-sm font-semibold text-right text-indigo-700">
+                  ₹{grandTotal}
+                </td>
                 <td colSpan={3}></td>
               </tr>
             </tfoot>
           </table>
         </div>
 
-        {/* Help Text */}
-        <div className="mt-4 text-sm text-gray-500 text-center">
-          This is a static demo page. Integrate with your backend to show real invoices and enable actual downloads.
+        {/* Footer Help */}
+        <div className="mt-6 text-center text-sm text-gray-500">
+          💡 Tip: Connect your backend API to dynamically fetch real payment data
+          and enable downloadable invoices.
         </div>
       </div>
     </div>

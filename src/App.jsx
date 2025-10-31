@@ -20,6 +20,10 @@ import LoginPage from "./pages/LoginPage";
 import OrdersPage from "./pages/OrdersPage";
 import UserProfile from "./pages/UserProfile";
 import Dashboard from "./pages/Dashboard";
+import ActiveSubscribers from "./pages/ActiveSubscribers";
+import Deliveries from "./pages/Deliveries";
+import ExpiringSubscriptions from "./pages/ExpiringSubscriptions";
+import MonthlyReports from "./pages/MonthlyReports";
 // --- Admin Pages ---
 import AdminMenuPage from "./pages/AdminMenuPage";
 import AdminDeliveryPage from "./pages/AdminDeliveryPage";
@@ -35,6 +39,10 @@ import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminMealsPage from "./pages/AdminMealsPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
+import SubscriberManagement from "./pages/SubscriberManagement";
+import AdminSettings from "./pages/AdminSettings";
+import CommunicationAutomation from "./pages/CommunicationAutomation";
+
 
 
 function App() {
@@ -97,6 +105,36 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminOrdersPage />
+                </ProtectedRoute>
+              }
+            />
+            {/* Additional admin/public routes referenced from AdminDashboard cards */}
+            <Route path="/active-subscribers" element={<ActiveSubscribers />} />
+            <Route path="/deliveries" element={<Deliveries />} />
+            <Route path="/expiring-subscriptions" element={<ExpiringSubscriptions />} />
+            <Route path="/reports" element={<MonthlyReports />} />
+
+            <Route
+              path="/admin/subscribers"
+              element={
+                <ProtectedRoute>
+                  <SubscriberManagement />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute>
+                  <AdminSettings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/communnication"
+              element={
+                <ProtectedRoute>
+                  <CommunicationAutomation />
                 </ProtectedRoute>
               }
             />

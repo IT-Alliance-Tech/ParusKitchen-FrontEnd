@@ -8,7 +8,7 @@ import {
 } from "../api";
 import { useNavigate } from "react-router-dom";   
 import { Bar, Line, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Title, Tooltip, Legend } from "chart.js";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Title, Tooltip, Legend, Filler } from "chart.js";
 
 ChartJS.register(
   CategoryScale,
@@ -17,6 +17,7 @@ ChartJS.register(
   LineElement,
   PointElement,
   ArcElement,
+  Filler,
   Title,
   Tooltip,
   Legend
