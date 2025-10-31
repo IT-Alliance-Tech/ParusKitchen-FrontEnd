@@ -16,23 +16,24 @@ const AdminLoginPage = () => {
     try {
       const data = await loginUser({ email, password });
 
-      // Validate response
       if (!data || !data.token || !data.user) {
         setError("Unexpected response from server. Please try again.");
         return;
       }
 
-      // Check admin role
-      if (data.user.role !== "admin") {
-        setError("Access denied. You are not an admin.");
+      const role = data.user.role;
+
+      // Allow admin and superadmin only
+      if (role !== "admin" && role !== "superadmin") {
+        setError("Access denied. You are not authorized to access admin panel.");
         return;
       }
 
-      // Save token and user info
+      // Save login details
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user)); // user.id, user.name, etc.
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      // Redirect to admin dashboard
+      // Redirect
       navigate("/admin");
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
@@ -44,7 +45,7 @@ const AdminLoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-primary-50 p-4">
       <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg">
         <h2 className="text-3xl font-bold text-primary-800 mb-6 text-center">
-          Admin Login
+          Admin / Super Admin Login
         </h2>
 
         {error && (
