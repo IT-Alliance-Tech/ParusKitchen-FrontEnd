@@ -19,11 +19,44 @@ const CartPage = () => {
     const fetchCart = async () => {
       setLoading(true);
       try {
-        const cart = await getCart();
-        if (cart && cart.length > 0) {
-          setCartItems(cart);
+        const res = await getCart();
+
+        // ✅ Adjust if backend returns { items: [...] }
+        const items = res?.items || res || [];
+
+        if (items.length > 0) {
+          // Normalize data to match UI expectations
+          const formattedItems = items.map((item) => {
+            if (item.meal) {
+              return {
+                _id: item.meal._id,
+                name: item.meal.name,
+                itemType: "Meal Item",
+                price: item.meal.price || 0,
+                quantity: item.quantity || 1,
+              };
+            } else if (item.subscription) {
+              return {
+                _id: item.subscription._id,
+                name: item.subscription.name,
+                itemType: "Subscription Plan",
+                price: item.subscription.price || 0,
+                quantity: item.quantity || 1,
+              };
+            } else {
+              return {
+                _id: item._id,
+                name: item.name || "Unknown Item",
+                itemType: "Misc Item",
+                price: item.price || 0,
+                quantity: item.quantity || 1,
+              };
+            }
+          });
+
+          setCartItems(formattedItems);
         } else {
-          // Static fallback data for demo
+          // Static fallback
           setCartItems([
             {
               _id: "1",
