@@ -1,5 +1,4 @@
-// src/App.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Layout Components
@@ -30,10 +29,6 @@ import AdminDeliveryPage from "./pages/AdminDeliveryPage";
 import AdminPaymentPage from "./pages/AdminPaymentPage";
 import UserPaymentHistory from "./pages/UserPaymentHistory";
 
-
-
-
-// Admin Pages
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
@@ -43,13 +38,25 @@ import SubscriberManagement from "./pages/SubscriberManagement";
 import AdminSettings from "./pages/AdminSettings";
 import CommunicationAutomation from "./pages/CommunicationAutomation";
 
-
-
 function App() {
+  const [user, setUser] = useState(null);
+
+  // initialize user once from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    try {
+      if (stored) setUser(JSON.parse(stored));
+    } catch {
+      localStorage.removeItem("user");
+      setUser(null);
+    }
+  }, []);
+
   return (
     <Router>
       <div className="min-h-screen bg-white flex flex-col">
-        <Header />
+        {/* Pass user + setter to Header */}
+        <Header user={user} setUser={setUser} />
         <main className="flex-grow">
           <Routes>
             {/* ---------- PUBLIC ROUTES ---------- */}
@@ -61,20 +68,17 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/login" element={<LoginPage />} />
+            {/* Pass setUser to LoginPage so login can update app state */}
+            <Route path="/login" element={<LoginPage setUser={setUser} />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* ---------- ADMIN ROUTES ---------- */}
-<Route path="/admin/menu-management" element={<AdminMenuPage />} />
-<Route path="/admin/delivery-management" element={<AdminDeliveryPage />} />
-<Route path="/admin/payment-management" element={<AdminPaymentPage />} />
-<Route path="/user-payments" element={<UserPaymentHistory />} />
-
-
-
 
             {/* ---------- ADMIN ROUTES ---------- */}
+            <Route path="/admin/menu-management" element={<AdminMenuPage />} />
+            <Route path="/admin/delivery-management" element={<AdminDeliveryPage />} />
+            <Route path="/admin/payment-management" element={<AdminPaymentPage />} />
+            <Route path="/user-payments" element={<UserPaymentHistory />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route
               path="/admin"
@@ -93,11 +97,11 @@ function App() {
               }
             />
             <Route
-             path="/admin/meals"
+              path="/admin/meals"
               element={
-              <ProtectedRoute>
-               <AdminMealsPage />
-               </ProtectedRoute>
+                <ProtectedRoute>
+                  <AdminMealsPage />
+                </ProtectedRoute>
               }
             />
             <Route
@@ -108,6 +112,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             {/* Additional admin/public routes referenced from AdminDashboard cards */}
             <Route path="/active-subscribers" element={<ActiveSubscribers />} />
             <Route path="/deliveries" element={<Deliveries />} />

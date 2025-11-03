@@ -2,35 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ChefHat } from 'lucide-react';
 
-const Header = () => {
+const Header = ({ user, setUser }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  // user is received as prop now
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    try {
-      if (storedUser) setUser(JSON.parse(storedUser));
-    } catch {
-      localStorage.removeItem('user');
-      setUser(null);
-    }
-
-    const handleStorageChange = () => {
-      const updatedUser = localStorage.getItem('user');
-      try {
-        setUser(updatedUser ? JSON.parse(updatedUser) : null);
-      } catch {
-        localStorage.removeItem('user');
-        setUser(null);
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -45,7 +23,8 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    setUser(null);
+    // update parent state so header re-renders
+    if (setUser) setUser(null);
     setIsDropdownOpen(false);
     navigate('/login');
   };
