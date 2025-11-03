@@ -120,7 +120,7 @@ export default function AdminDeliveryPage() {
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Footerr */}
       <div className="text-center text-sm text-gray-500 mt-12">
         Tip: Manage delivery statuses and track performance easily from this
         dashboard.
