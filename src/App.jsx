@@ -131,7 +131,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/communication"
+              path="/admin/communnication"
               element={
                 <ProtectedRoute>
                   <CommunicationAutomation />

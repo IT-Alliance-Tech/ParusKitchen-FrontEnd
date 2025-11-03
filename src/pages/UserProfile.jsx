@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ import useNavigate
+import { useNavigate } from "react-router-dom"; 
 import { getUserProfile, updateUserProfile } from "../api";
 
 const UserProfile = () => {
@@ -12,7 +12,7 @@ const UserProfile = () => {
   const [editing, setEditing] = useState(false);
   const [message, setMessage] = useState("");
 
-  const navigate = useNavigate(); // ✅ initialize navigate
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     fetchUserProfile();
@@ -59,8 +59,15 @@ const UserProfile = () => {
           <p className="text-center mb-4 text-green-600 font-semibold">{message}</p>
         )}
 
-        {/* ✅ New Dashboard Button */}
-        <div className="flex justify-end mb-6">
+        {/* ✅ Navigation Buttons */}
+        <div className="flex justify-end gap-3 mb-6">
+          <button
+            onClick={() => navigate("/user-payments")} // ✅ redirects to your UserPaymentHistory page
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold"
+          >
+            My Payments
+          </button>
+
           <button
             onClick={() => navigate("/dashboard")}
             className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl font-semibold"
