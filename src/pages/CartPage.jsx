@@ -163,7 +163,7 @@ const CartPage = () => {
         )}
       </section>
 
-      {/* Delivery Details Form */}
+      {/* Delivery Details Form push */}
       <section className="bg-white shadow-lg rounded-2xl p-8 border border-gray-200">
         <h3 className="text-2xl font-bold text-primary-800 mb-6 text-center">
           Delivery Details
