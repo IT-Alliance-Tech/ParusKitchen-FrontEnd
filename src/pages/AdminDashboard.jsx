@@ -35,7 +35,7 @@ ChartJS.register(
   Legend
 );
 
-// Map routes -> components (adjust paths if needed)
+// Map routes -> components 
 const componentMap = {
   "/admin/orders": lazy(() => import("../pages/AdminOrdersPage")),
   "/admin/meals": lazy(() => import("../pages/AdminMealsPage")),
