@@ -23,6 +23,8 @@ import ActiveSubscribers from "./pages/ActiveSubscribers";
 import Deliveries from "./pages/Deliveries";
 import ExpiringSubscriptions from "./pages/ExpiringSubscriptions";
 import MonthlyReports from "./pages/MonthlyReports";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 // --- Admin Pages ---
 import AdminMenuPage from "./pages/AdminMenuPage";
 import AdminDeliveryPage from "./pages/AdminDeliveryPage";
@@ -70,6 +72,8 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             {/* Pass setUser to LoginPage so login can update app state */}
             <Route path="/login" element={<LoginPage setUser={setUser} />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/dashboard" element={<Dashboard />} />
