@@ -47,6 +47,29 @@ export const signupUser = async (userData) => {
   }
 };
 
+// ====================== PASSWORD RESET ======================
+export const forgotPassword = async (email) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/forgot-password`, { email }, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, 'Forgot password');
+  }
+};
+
+export const resetPassword = async (token, password) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/reset-password/${token}`, { password }, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, 'Reset password');
+  }
+};
+
 // ====================== USER PROFILE ======================
 export const getUserProfile = async () => {
   try {

@@ -52,6 +52,9 @@ const LoginPage = ({ setUser }) => {
             className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600"
             required
           />
+          <div className="text-right mt-2">
+            <Link to="/forgot-password" className="text-sm text-primary-600 hover:underline">Forgot Password?</Link>
+          </div>
           <button className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-poppins font-semibold transition-all duration-200">
             Login
           </button>
